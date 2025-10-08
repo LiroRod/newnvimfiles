@@ -1,8 +1,31 @@
-tt.*
-.tests
+# LazyVim keeps the actual configuration (lua/, init.lua, lazy-lock.json, etc.)
+# tracked in git. Ignore only editor- or plugin-generated state.
+
+# Lazy.nvim / plugin caches
+data/
+lazy/
+log/
+logs/
+session/
+sessions/
+shada/
+spell/
+swap/
+tmp/
+undo/
 doc/tags
-debug
-.repro
-foo.*
+
+# Editor swap and backup files
+*.swp
+*.swo
+*.swm
+*.tmp
+*.bak
+*.orig
 *.log
-data
+.nvimlog
+
+# OS and tooling noise
+.DS_Store
+Thumbs.db
+node_modules/
