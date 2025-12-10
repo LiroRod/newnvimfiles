@@ -56,27 +56,6 @@ return {
                 analyzers_path .. "sonarpython.jar",
                 analyzers_path .. "sonarxml.jar",
             },
-            -- Configure diagnostics to trigger only on save
-            handlers = {
-                ["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-                    update_in_insert = false,
-                }),
-            },
-            on_attach = function(client, bufnr)
-                -- Disable automatic diagnostics
-                vim.diagnostic.disable(bufnr)
-
-                -- Enable diagnostics only on save
-                vim.api.nvim_create_autocmd("BufWritePost", {
-                    buffer = bufnr,
-                    callback = function()
-                        vim.diagnostic.enable(bufnr)
-                        vim.lsp.buf_request(bufnr, "textDocument/diagnostic", {
-                            textDocument = vim.lsp.util.make_text_document_params(bufnr),
-                        })
-                    end,
-                })
-            end,
         },
         filetypes = sonarlint_ft,
     },

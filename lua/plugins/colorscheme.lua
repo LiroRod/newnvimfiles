@@ -1,26 +1,26 @@
 return {
-    {
-        "nyoom-engineering/oxocarbon.nvim",
-        priority = 1000,
-    },
-    {
-        "LazyVim/LazyVim",
-        opts = {
-            colorscheme = "oxocarbon",
-        },
-    },
     -- {
-    --     "ellisonleao/gruvbox.nvim",
+    --     "nyoom-engineering/oxocarbon.nvim",
     --     priority = 1000,
-    --     config = true,
+    -- },
+    -- {
+    --     "LazyVim/LazyVim",
     --     opts = {
-    --         ...,
-    --     },
-    --     {
-    --         "LazyVim/LazyVim",
-    --         opts = {
-    --             colorscheme = "gruvbox",
-    --         },
+    --         colorscheme = "oxocarbon",
     --     },
     -- },
+    {
+        "ellisonleao/gruvbox.nvim",
+        priority = 1000,
+        config = true,
+        opts = {
+            ...,
+        },
+        {
+            "LazyVim/LazyVim",
+            opts = {
+                colorscheme = "gruvbox",
+            },
+        },
+    },
 }

@@ -1,18 +1,15 @@
--- Add this to your LazyVim config in lua/plugins/presence.lua
--- This configuration will display "confidential project" for any directory inside bnp-projects
--- and hide actual file names with "confidential file"
-
 return {
-    -- Discord presence plugin
     {
         "andweeb/presence.nvim",
         config = function()
-            -- Function to check if the current workspace is in bnp-projects
-            local function is_confidential(path)
-                if not path then
-                    return false
+            -- Robust detector for "bnp-projects" based on buffer path and cwd
+            local function in_bnp_projects()
+                local buf_path = vim.api.nvim_buf_get_name(0) or ""
+                local cwd = (vim.loop and vim.loop.cwd()) or (vim.fn.getcwd() or "")
+                local function is_confidential_path(p)
+                    return p:match("[/\\]bnp%-projects([/\\].*)?$") ~= nil or p:match("[/\\]bnp%-projects[/\\]") ~= nil
                 end
-                return string.match(path, ".*/bnp%-projects/.*") or path:find("bnp%-projects$")
+                return is_confidential_path(buf_path) or is_confidential_path(cwd)
             end
 
             require("presence").setup({
@@ -22,47 +19,46 @@ return {
                 log_level = nil,
                 debounce_timeout = 10,
                 enable_line_number = false,
-                blacklist = {},
-                buttons = true,
+                blacklist = {}, -- NOTE: don't blacklist bnp-projects; we want to censor, not disable
+                buttons = false,
                 file_assets = {},
                 show_time = true,
 
-                -- Hide all project names in bnp-projects
-                workspace_text = function(project_name, workspace)
-                    if is_confidential(workspace) then
+                workspace_text = function(project_name, _filename)
+                    if in_bnp_projects() then
                         return "confidential project"
                     end
-
-                    -- Default behavior for other directories
-                    if project_name == "" then
+                    if (project_name or "") == "" then
                         return "No Project"
                     else
                         return project_name
                     end
                 end,
 
-                -- Hide all file names in bnp-projects
-                editing_text = function(filename, editing_file)
-                    if is_confidential(editing_file) then
+                -- Buffer is editable
+                editing_text = function(filename)
+                    if in_bnp_projects() then
                         return "Editing confidential file"
                     else
-                        return "Editing " .. filename
+                        return "Editing " .. (filename or "")
                     end
                 end,
 
-                file_explorer_text = function(filename, file_explorer)
-                    if is_confidential(file_explorer) then
+                -- File explorer (e.g. netrw, neo-tree, nvim-tree)
+                file_explorer_text = function(explorer_name)
+                    if in_bnp_projects() then
                         return "Browsing confidential files"
                     else
-                        return "Browsing " .. filename
+                        return "Browsing " .. (explorer_name or "files")
                     end
                 end,
 
-                reading_text = function(filename, reading_file)
-                    if is_confidential(reading_file) then
+                -- Readonly/unmodifiable buffers
+                reading_text = function(filename)
+                    if in_bnp_projects() then
                         return "Reading confidential file"
                     else
-                        return "Reading " .. filename
+                        return "Reading " .. (filename or "")
                     end
                 end,
 
