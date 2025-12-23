@@ -9,18 +9,12 @@ return {
     --         colorscheme = "oxocarbon",
     --     },
     -- },
-    {
-        "ellisonleao/gruvbox.nvim",
-        priority = 1000,
-        config = true,
-        opts = {
-            ...,
-        },
-        {
-            "LazyVim/LazyVim",
-            opts = {
-                colorscheme = "gruvbox",
-            },
-        },
-    },
+  {
+    "nyoom-engineering/oxocarbon.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.cmd.colorscheme("oxocarbon")
+    end,
+  },
 }

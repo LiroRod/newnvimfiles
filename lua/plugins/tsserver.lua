@@ -14,7 +14,9 @@ return {
     opts = {
         ---@type lspconfig.options
         servers = {
-            -- tsserver will be automatically installed with mason and loaded with lspconfig
+            -- Disable vtsls (LazyVim's default)
+            vtsls = false,
+            -- Enable typescript-language-server instead
             tsserver = {},
         },
         -- you can do any additional lsp server setup here
